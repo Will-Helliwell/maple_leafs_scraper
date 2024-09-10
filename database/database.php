@@ -1,14 +1,27 @@
 <?php
-class Database
+class DatabaseConnection
 {
     private $conn;
 
     // Constructor to initialize the database connection
-    public function __construct($servername, $username, $password, $dbname)
+    public function __construct($database_connection_details)
     {
-        $this->conn = new mysqli($servername, $username, $password, $dbname);
-        if ($this->conn->connect_error) {
-            die("Database connection failed: " . $this->conn->connect_error);
+
+        $required_keys = ['servername', 'username', 'password', 'database_name'];
+        foreach ($required_keys as $key) {
+            if (!array_key_exists($key, $database_connection_details)) {
+                die("Missing database  configuration key: $key");
+            }
+        }
+        $servername = $database_connection_details['servername'];
+        $username = $database_connection_details['username'];
+        $password = $database_connection_details['password'];
+        $database_name = $database_connection_details['database_name'];
+
+         try {
+            $this->conn = new mysqli($servername, $username, $password, $database_name);
+        } catch (Exception $e) {
+            die("Database connection failed: " . $e);
         }
     }
 
@@ -46,5 +59,3 @@ class Database
         $this->conn->close();
     }
 }
-
-

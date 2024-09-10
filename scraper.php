@@ -13,13 +13,13 @@ require_once ROOT . 'vendor/autoload.php';
 require_once ROOT . 'database/database.php';
 
 
-// get config
+// get config details
 $sources = get_config('sources');
-
-// get user agent
 $user_agent = get_config('user_agent');
+$database_connection_details = get_config('database_connection_details');
+// pp($database_connection_details);
 
-$database = new Database('localhost', 'root', '', 'maple_leafs_scraper_will_test');
+$database = new DatabaseConnection($database_connection_details);
 $rows = $database->fetchAll("SELECT * FROM test_table");
 foreach ($rows as $row) {
     print_r($row);
