@@ -1,4 +1,16 @@
 <?php
+
+namespace App;
+
+use Exception;
+use mysqli;
+
+/**
+ * ArticleRepository class
+ * Handles operations related to articles in the database.
+ * 
+ * @package App
+ */
 class DatabaseConnection
 {
     private $conn;

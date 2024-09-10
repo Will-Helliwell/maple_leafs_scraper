@@ -10,22 +10,20 @@ define('CONFIG', require_once ROOT . 'config.php');
 // requirements
 require_once ROOT . 'helpers/func.php';
 require_once ROOT . 'vendor/autoload.php';
-require_once ROOT . 'database/database.php';
 
 
 // get config details
 $sources = get_config('sources');
 $user_agent = get_config('user_agent');
 $database_connection_details = get_config('database_connection_details');
-// pp($database_connection_details);
 
-$database = new DatabaseConnection($database_connection_details);
+// // test query
+$database = new \App\DatabaseConnection($database_connection_details);
 $rows = $database->fetchAll("SELECT * FROM test_table");
 foreach ($rows as $row) {
     print_r($row);
 }
 $database->close();
-
 if(empty($sources)) {
     die('No sources found in config.php');
 }
@@ -34,16 +32,16 @@ $output_array = [];
 
 // lets loop through the sources
 foreach ($sources as $source) {
-    // echo 'source = ' . PHP_EOL;
-    // pp($source);
+    echo 'source = ' . PHP_EOL;
+    pp($source);
 
     $parsed_array = (new \App\Parser($source, $user_agent))->parse()->getResponse();
-    // echo 'parsed_array = ' . PHP_EOL;
-    // pp($parsed_array);
+    echo 'parsed_array = ' . PHP_EOL;
+    pp($parsed_array);
 
     $source_domain = str_replace(['https://', 'http://', 'www.'], '', $source);
-    // echo 'source_domain = ' . PHP_EOL;
-    // pp($source_domain);
+    echo 'source_domain = ' . PHP_EOL;
+    pp($source_domain);
 	
     // merge the parsed array with the output array
     if(!empty($parsed_array)) {
@@ -52,8 +50,8 @@ foreach ($sources as $source) {
 
     // sleep between requests
     sleep(get_config('sleep_between_requests'));
-    // echo PHP_EOL;
-    // echo PHP_EOL;
+    echo PHP_EOL;
+    echo PHP_EOL;
 }
 
 // check if output array is empty
