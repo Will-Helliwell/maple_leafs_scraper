@@ -7,11 +7,11 @@ error_reporting(E_ALL);
 define('ROOT', __DIR__ . '/');
 define('CONFIG', require_once ROOT . 'config.php');
 
-// include func.php
+// requirements
 require_once ROOT . 'helpers/func.php';
-
-// include vendor autoload
 require_once ROOT . 'vendor/autoload.php';
+require_once ROOT . 'database/database.php';
+
 
 // get config
 $sources = get_config('sources');
@@ -19,34 +19,12 @@ $sources = get_config('sources');
 // get user agent
 $user_agent = get_config('user_agent');
 
-$servername = "localhost";
-$username = "root";
-$password = "";         
-$dbname = "maple_leafs_scraper_will_test";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
+$database = new Database('localhost', 'root', '', 'maple_leafs_scraper_will_test');
+$rows = $database->fetchAll("SELECT * FROM test_table");
+foreach ($rows as $row) {
+    print_r($row);
 }
-pp("Connected successfully");
-
-$sql = "SELECT * FROM test_table";  
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        print_r($row);
-    }
-} else {
-    echo "0 results";
-}
-
-$conn->close();
-
-
+$database->close();
 
 if(empty($sources)) {
     die('No sources found in config.php');
