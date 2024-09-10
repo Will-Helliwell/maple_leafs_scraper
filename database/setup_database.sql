@@ -1,5 +1,18 @@
-CREATE TABLE test_table (
+CREATE TABLE websites (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    count INT NOT NULL
+    url VARCHAR(255) NOT NULL,
+    date_last_scraped DATETIME,
+    UNIQUE (url)
+);
+
+CREATE TABLE articles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    website_id INT NOT NULL,
+    title VARCHAR(200) NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    author VARCHAR(50),
+    date_published DATETIME,
+    date_scraped DATETIME,
+    FOREIGN KEY (website_id) REFERENCES websites(id) ON DELETE RESTRICT,
+    INDEX (url)
 );
