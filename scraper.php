@@ -19,6 +19,34 @@ $sources = get_config('sources');
 // get user agent
 $user_agent = get_config('user_agent');
 
+$servername = "localhost";
+$username = "root";
+$password = "";         
+$dbname = "maple_leafs_scraper_will_test";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Database connection failed: " . $conn->connect_error);
+}
+pp("Connected successfully");
+
+$sql = "SELECT * FROM test_table";  
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        print_r($row);
+    }
+} else {
+    echo "0 results";
+}
+
+$conn->close();
+
+
 
 if(empty($sources)) {
     die('No sources found in config.php');
@@ -28,10 +56,16 @@ $output_array = [];
 
 // lets loop through the sources
 foreach ($sources as $source) {
-    
+    // echo 'source = ' . PHP_EOL;
+    // pp($source);
+
     $parsed_array = (new \App\Parser($source, $user_agent))->parse()->getResponse();
+    // echo 'parsed_array = ' . PHP_EOL;
+    // pp($parsed_array);
 
     $source_domain = str_replace(['https://', 'http://', 'www.'], '', $source);
+    // echo 'source_domain = ' . PHP_EOL;
+    // pp($source_domain);
 	
     // merge the parsed array with the output array
     if(!empty($parsed_array)) {
@@ -40,7 +74,8 @@ foreach ($sources as $source) {
 
     // sleep between requests
     sleep(get_config('sleep_between_requests'));
-
+    // echo PHP_EOL;
+    // echo PHP_EOL;
 }
 
 // check if output array is empty
@@ -58,3 +93,4 @@ if(get_config('output_type') === 'json') {
 
 // simply print the output array
 pp($output_array);
+exit();
