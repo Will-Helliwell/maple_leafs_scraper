@@ -46,7 +46,7 @@ function getSources($dbDetails)
 function filterSources($sources)
 {
     return array_filter($sources, function ($value, $index) {
-        return $index === 3;
+        return $index === 0;
     }, ARRAY_FILTER_USE_BOTH);
 
     return $sources;
@@ -114,7 +114,6 @@ function outputResults($output_array, $output_type, $dbDetails)
                         echo 'article does not exist, inserting into db...' . PHP_EOL;
                         $article['source_id'] = $source_id;
                         $article_repository->insertArticle($article);
-                        break;
                     } else {
                         echo 'article already exists in db' . PHP_EOL;
                     }
