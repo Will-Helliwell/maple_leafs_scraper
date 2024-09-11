@@ -97,6 +97,22 @@ switch ($output_type) {
 
     case 'database':
         echo 'Output type specified as database' . PHP_EOL;
+        $articleRepository = new \App\ArticleRepository($database_connection_details);
+        foreach ($output_array as $source_id => $articles) {
+            // echo 'source_id = ' . $source_id . PHP_EOL;
+            // $articles_length = count($articles);
+            // echo 'articles length = ' . $articles_length . PHP_EOL;
+            // echo 'articles = ' . PHP_EOL;
+            // pp($articles);
+
+            foreach ($articles as $article) {
+                echo 'trying to insert into db' . PHP_EOL;
+                $article['source_id'] = $source_id;
+                $articleRepository->insertArticle($article);
+                $articleRepository->close();
+                break;
+            }
+        }
         break;
 
     default:

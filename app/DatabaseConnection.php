@@ -30,7 +30,7 @@ class DatabaseConnection
         $password = $database_connection_details['password'];
         $database_name = $database_connection_details['database_name'];
 
-         try {
+        try {
             $this->conn = new mysqli($servername, $username, $password, $database_name);
         } catch (Exception $e) {
             die("Database connection failed: " . $e);
@@ -59,11 +59,45 @@ class DatabaseConnection
     }
 
     // Method to insert data into the database
-    public function insert($sql)
+    public function insert($sql, $params)
     {
-        $this->query($sql);
-        return $this->conn->insert_id;
+        $stmt = $this->conn->prepare($sql);
+        if ($stmt === false) {
+            die("Prepare failed: " . $this->conn->error);
+        }
+
+        // Bind parameters to the statement
+        // Determine the types of the parameters
+        $types = '';
+        foreach ($params as $param) {
+            if (is_int($param)) {
+                $types .= 'i'; // Integer
+            } elseif (is_double($param)) {
+                $types .= 'd'; // Double
+            } elseif (is_string($param)) {
+                $types .= 's'; // String
+            } else {
+                $types .= 'b'; // Blob (for binary data)
+            }
+        }
+
+        $stmt->bind_param($types, ...$params);
+
+        // Execute the statement
+        if (!$stmt->execute()) {
+            die("Execute failed: " . $stmt->error);
+        }
+
+        // Get the ID of the inserted record
+        $insert_id = $stmt->insert_id;
+
+        // Close the statement
+        $stmt->close();
+
+        return $insert_id;
     }
+
+
 
     // Method to close the database connection
     public function close()
