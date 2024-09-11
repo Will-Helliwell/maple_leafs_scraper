@@ -97,7 +97,15 @@ switch ($output_type) {
 
     case 'database':
         echo 'Output type specified as database' . PHP_EOL;
-        $articleRepository = new \App\ArticleRepository($database_connection_details);
+        $article_repository = new \App\ArticleRepository($database_connection_details);
+        // Fetch all existing articles from the database, grouped by source_id
+        $existing_articles = $article_repository->getAllArticlesGroupedBySource();
+        // $existing_articles_length = count($existing_articles);
+        // echo 'existing_articles length = ' . $existing_articles_length . PHP_EOL;
+        // echo 'existing_articles = ' . PHP_EOL;
+        // pp($existing_articles);
+
+        // Insert all scraped articles
         foreach ($output_array as $source_id => $articles) {
             // echo 'source_id = ' . $source_id . PHP_EOL;
             // $articles_length = count($articles);
@@ -108,11 +116,11 @@ switch ($output_type) {
             foreach ($articles as $article) {
                 echo 'trying to insert into db' . PHP_EOL;
                 $article['source_id'] = $source_id;
-                $articleRepository->insertArticle($article);
-                $articleRepository->close();
+                $article_repository->insertArticle($article);
                 break;
             }
         }
+        $article_repository->close();
         break;
 
     default:

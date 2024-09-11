@@ -15,15 +15,25 @@ class ArticleRepository {
     public function __construct($database_connection_details) {
         $this->database = new DatabaseConnection($database_connection_details);
     }
-    
-    // public function articleExists($title) {
-    //     $query = "SELECT COUNT(*) FROM articles WHERE title = :title";
-    //     $params = [':title' => $title];
-    //     return $this->database->fetchOne($query, $params)['COUNT(*)'] > 0;
-    // }
+
+    public function getAllArticlesGroupedBySource() {
+        $query = "SELECT id, source_id, url FROM articles";
+        $articles = $this->database->fetchAll($query);
+
+        $groupedArticles = [];
+        foreach ($articles as $article) {
+            $source_id = $article['source_id'];
+            if (!isset($groupedArticles[$source_id])) {
+                $groupedArticles[$source_id] = [];
+            }
+            $groupedArticles[$source_id][] = $article;
+        }
+
+        return $groupedArticles;
+    }
 
     public function insertArticle($article) {
-        $query = "INSERT INTO articles (website_id, title, url, author, date_published) VALUES (?, ?, ?, ?, ?)";
+        $query = "INSERT INTO articles (source_id, title, url, author, date_published) VALUES (?, ?, ?, ?, ?)";
         $params = [
             $article['source_id'],
             $article['title'],
