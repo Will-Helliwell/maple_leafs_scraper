@@ -16,6 +16,7 @@ require_once ROOT . 'vendor/autoload.php';
 $sources = get_config('sources');
 $user_agent = get_config('user_agent');
 $database_connection_details = get_config('database_connection_details');
+$output_type = get_config('output_type');
 
 // // test query
 $database = new \App\DatabaseConnection($database_connection_details);
@@ -59,14 +60,21 @@ if(empty($output_array)) {
     die('No results found');
 }
 
-// check if output type is json
-if(get_config('output_type') === 'json') {
-    // add header
-    header('Content-Type: application/json');
-    echo json_encode($output_array);
-    exit;
+switch ($output_type) {
+    case 'json':
+         // add header
+        header('Content-Type: application/json');
+        echo json_encode($output_array);
+        
+        break;
+    
+    case 'database':
+        echo 'Output type specified as database' . PHP_EOL;
+        exit;
+        break;
+    
+    default:
+        echo 'Output type has not been specified.' . PHP_EOL;
+        break;
 }
-
-// simply print the output array
-pp($output_array);
-exit();
+exit;
