@@ -16,11 +16,11 @@ $user_agent = get_config('user_agent');
 $database_connection_details = get_config('database_connection_details');
 $output_type = get_config('output_type');
 
+$start_time = start_timer();
+
 // main script steps
 $output_array = [];
 $sources = ($output_type === 'database') ? getSources($database_connection_details) : get_config('sources');
-echo 'sources = ' . PHP_EOL;
-pp($sources);
 processSources($sources, $user_agent, $output_type, $output_array);
 outputResults($output_array, $output_type, $database_connection_details);
 
@@ -40,9 +40,15 @@ function getSources($dbDetails)
         die('No sources found in database.');
     }
 
-    return filterSources($sources);
+    return $sources;
+    // return filterSources($sources); // only use for debugging
 }
 
+/**
+ * Helpful for debugging only - allows you to only process a specific source.
+ *
+ * @param array $sources The sources to be filtered.
+ */
 function filterSources($sources)
 {
     return array_filter($sources, function ($value, $index) {
@@ -101,21 +107,15 @@ function outputResults($output_array, $output_type, $dbDetails)
             break;
 
         case 'database':
-            echo 'Output type specified as database' . PHP_EOL;
+            echo 'Outputting to database.' . PHP_EOL;
             $article_repository = new \App\ArticleRepository($dbDetails);
             $existing_articles = $article_repository->getAllArticlesGroupedBySourceAndUrl();
-
             foreach ($output_array as $source_id => $articles) {
                 foreach ($articles as $article) {
-                    echo 'article = ' . PHP_EOL;
-                    pp($article);
                     $article_url = $article['url'];
                     if (!array_key_exists($source_id, $existing_articles) || !array_key_exists($article_url, $existing_articles[$source_id])) {
-                        echo 'article does not exist, inserting into db...' . PHP_EOL;
                         $article['source_id'] = $source_id;
                         $article_repository->insertArticle($article);
-                    } else {
-                        echo 'article already exists in db' . PHP_EOL;
                     }
                 }
             }
@@ -127,4 +127,8 @@ function outputResults($output_array, $output_type, $dbDetails)
             break;
     }
 }
+
+$execution_time = end_timer($start_time);
+echo "Script executed in " . number_format($execution_time, 4) . " seconds.";
+
 exit;

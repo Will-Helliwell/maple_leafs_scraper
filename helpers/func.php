@@ -63,3 +63,24 @@ function pp($data, $type = null)
     echo PHP_EOL . PHP_EOL;
     
 }
+
+/**
+ * Decodes any of the varchars stored in the database into readable text (e.g. Articles.title)
+ *
+ * @param string $html_entity_string The string extracted from the database
+ */
+function decode_html_entity_from_database($html_entity_string){
+    return html_entity_decode($html_entity_string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+}
+
+function start_timer()
+{
+    return microtime(true);
+}
+
+function end_timer($start_time)
+{
+    $end_time = microtime(true);
+    $execution_time = $end_time - $start_time;
+    return $execution_time;
+}

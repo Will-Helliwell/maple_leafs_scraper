@@ -20,7 +20,7 @@ class ArticleRepository
 
     public function getAllArticlesGroupedBySourceAndUrl()
     {
-        $query = "SELECT id, source_id, url FROM articles";
+        $query = "SELECT id, source_id, url, title FROM articles";
         $articles = $this->database->fetchAll($query);
 
         $groupedArticles = [];
@@ -43,10 +43,17 @@ class ArticleRepository
 
     public function insertArticle($article)
     {
+        // Truncate the title to 255 characters (max that can be stored in db unless changing data type or hashing before storage)
+        $title = $article['title'];
+        $max_length = 255;
+        if (strlen($title) > $max_length) {
+            $title = substr($title, 0, $max_length);
+        }
+
         $query = "INSERT INTO articles (source_id, title, url, author, date_published) VALUES (?, ?, ?, ?, ?)";
         $params = [
             $article['source_id'],
-            $article['title'],
+            $title,
             $article['url'],
             $article['author'],
             $article['date'],
