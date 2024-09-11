@@ -1,4 +1,19 @@
-INSERT INTO test_table (name, count) VALUES
-('Item 1', 10),
-('Item 2', 20),
-('Item 3', 30);
+INSERT INTO sources (url) VALUES ('https://www.nhl.com/mapleleafs/news/');
+INSERT INTO sources (url) VALUES ('https://www.nhl.com/news');
+INSERT INTO sources (url) VALUES ('https://www.thestar.com/sports/leafs.html');
+INSERT INTO sources (url) VALUES ('https://theleafsnation.com/category/news');
+INSERT INTO sources (url) VALUES ('https://theathletic.com/nhl/');
+INSERT INTO sources (url) VALUES ('https://www.pensionplanpuppets.com/');
+INSERT INTO sources (url) VALUES ('https://mapleleafshotstove.com/leafs-news/');
+INSERT INTO sources (url) VALUES ('https://betweentheposts.ca/');
+INSERT INTO sources (url) VALUES ('https://centreofleafsnation.com/');
+INSERT INTO sources (url) VALUES ('https://www.nhlpa.com/news');
+INSERT INTO sources (url) VALUES ('https://torontosun.com/category/sports/hockey/nhl/toronto-maple-leafs/');
+INSERT INTO sources (url) VALUES ('https://www.theglobeandmail.com/sports/hockey/');
+INSERT INTO sources (url) VALUES ('https://nationalpost.com/category/sports/hockey/nhl/');
+INSERT INTO sources (url) VALUES ('https://www.sportsnet.ca/hockey/nhl/');
+INSERT INTO sources (url) VALUES ('https://www.tsn.ca/nhl/team-page/toronto-maple-leafs/166');
+INSERT INTO sources (url) VALUES ('https://www.cbc.ca/sports/hockey/nhl');
+INSERT INTO sources (url) VALUES ('https://globalnews.ca/tag/nhl/');
+INSERT INTO sources (url) VALUES ('https://www.ctvnews.ca/sports');
+INSERT INTO sources (url) VALUES ('https://editorinleaf.com/toronto-maple-leafs-news/');
