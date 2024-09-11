@@ -11,18 +11,25 @@ define('CONFIG', require_once ROOT . 'config.php');
 require_once ROOT . 'helpers/func.php';
 require_once ROOT . 'vendor/autoload.php';
 
-$sources = get_config('sources');
+// get config
 $user_agent = get_config('user_agent');
 $database_connection_details = get_config('database_connection_details');
 $output_type = get_config('output_type');
 
+// main script steps
 $output_array = [];
-$sources = ($output_type === 'database') ? getSources($database_connection_details) : $sources;
+$sources = ($output_type === 'database') ? getSources($database_connection_details) : get_config('sources');
 echo 'sources = ' . PHP_EOL;
 pp($sources);
 processSources($sources, $user_agent, $output_type, $output_array);
 outputResults($output_array, $output_type, $database_connection_details);
 
+/**
+ * Retrieves sources from the database
+ *
+ * @param array $dbDetails The database connection details.
+ * @return array The filtered sources.
+ */
 function getSources($dbDetails)
 {
 
@@ -45,6 +52,14 @@ function filterSources($sources)
     return $sources;
 }
 
+/**
+ * Processes each source by parsing it and populating the output array.
+ *
+ * @param array $sources The sources to process.
+ * @param string $user_agent The user agent to use for requests.
+ * @param string $output_type The type of output ('database' or other).
+ * @param array &$output_array The array to populate with parsed data.
+ */
 function processSources($sources, $user_agent, $output_type, &$output_array)
 {
     foreach ($sources as $source) {
@@ -66,6 +81,13 @@ function processSources($sources, $user_agent, $output_type, &$output_array)
     }
 }
 
+/**
+ * Outputs the results based on the specified output type.
+ *
+ * @param array $output_array The array of parsed data.
+ * @param string $output_type The type of output ('json' or 'database').
+ * @param array $dbDetails The database connection details for 'database' output type.
+ */
 function outputResults($output_array, $output_type, $dbDetails)
 {
     if (empty($output_array)) {
