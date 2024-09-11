@@ -23,9 +23,9 @@ $output_array = [];
 
 // get all sources from the database
 if ($output_type === 'database') {
-    $db = new \App\DatabaseConnection($database_connection_details);
-    $sources = $db->fetchAll("SELECT id, url FROM sources;");
-    $db->close();
+    $source_repository = new \App\SourceRepository($database_connection_details);
+    $sources = $source_repository->getAllSources();
+    $source_repository->close();
     if (empty($sources)) {
         die('No sources found in database.');
     }
