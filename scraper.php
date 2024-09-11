@@ -31,24 +31,32 @@ if ($output_type === 'database') {
     }
 }
 $sources_count = count($sources);
-// echo 'sources length before = ' . $sources_count . PHP_EOL;
-// echo 'sources = ' . PHP_EOL;
-// pp($sources);
+echo 'sources length before = ' . $sources_count . PHP_EOL;
+echo 'sources = ' . PHP_EOL;
+pp($sources);
 
 //temporarily filter array for only maple leafs
-$sources = array_filter($sources, function ($value, $index) {
-    return $index === 3;
-}, ARRAY_FILTER_USE_BOTH);
-// $sources_count = count($sources); 
-// echo 'sources length after = ' . $sources_count . PHP_EOL;
-
+if ($output_type === 'database') {
+    $sources = array_filter($sources, function ($value, $index) {
+        return $index === 3;
+    }, ARRAY_FILTER_USE_BOTH);
+    $sources_count = count($sources);
+    echo 'sources length after = ' . $sources_count . PHP_EOL;
+    echo 'sources = ' . PHP_EOL;
+    pp($sources);
+}
 
 // lets loop through the sources
 foreach ($sources as $source) {
     echo 'source = ' . PHP_EOL;
     pp($source);
 
-    $source_url = ($output_type === 'json') ? $source : $source['url'];
+    if ($output_type === 'database') {
+        $source_url = $source['url'];
+        $source_id = $source['id'];
+    } else {
+        $source_url = $source;
+    }
 
     $parsed_array = (new \App\Parser($source_url, $user_agent))->parse()->getResponse();
     echo 'parsed_array = ' . PHP_EOL;
@@ -60,7 +68,11 @@ foreach ($sources as $source) {
 
     // merge the parsed array with the output array
     if (!empty($parsed_array)) {
-        $output_array[$source_domain] = $parsed_array;
+        if ($output_type === 'database') {
+            $output_array[$source_id] = $parsed_array;
+        } else {
+            $output_array[$source_domain] = $parsed_array;
+        }
     }
 
     // sleep between requests
