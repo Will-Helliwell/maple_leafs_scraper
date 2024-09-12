@@ -52,7 +52,7 @@ function getSources($dbDetails)
 function filterSources($sources)
 {
     return array_filter($sources, function ($value, $index) {
-        return $index === 0;
+        return $index === 14;
     }, ARRAY_FILTER_USE_BOTH);
 
     return $sources;
@@ -88,7 +88,7 @@ function processSources($sources, $user_agent, $output_type, &$output_array)
 }
 
 /**
- * Outputs the results based on the specified output type.
+ * Outputs the results based on the specified output type (json or database).
  *
  * @param array $output_array The array of parsed data.
  * @param string $output_type The type of output ('json' or 'database').
@@ -129,6 +129,6 @@ function outputResults($output_array, $output_type, $dbDetails)
 }
 
 $execution_time = end_timer($start_time);
-echo "Script executed in " . number_format($execution_time, 4) . " seconds.";
+echo PHP_EOL . PHP_EOL . "Script executed in " . number_format($execution_time, 4) . " seconds.";
 
 exit;
