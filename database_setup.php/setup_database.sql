@@ -1,7 +1,6 @@
 CREATE TABLE sources (
     id INT AUTO_INCREMENT PRIMARY KEY,
     url VARCHAR(255) NOT NULL,
-    date_last_scraped DATETIME,
     UNIQUE (url)
 );
 
